@@ -1,0 +1,41 @@
+<%layout("/layouts/boilerplate.ejs")-%>
+<div class="row">
+    <div class="col-8 offset-2">
+   <br>
+        <h2>Create new listing</h2>
+        <br>
+        <form method="POST" action="/listings" novalidate class="needs-validation">
+            <div class="mb-3"><label for="title" class="form-lable">Title</label>
+                <input name="listing[title]" class="form-control" placeholder="enter your title"
+                required>
+                <div class="valid-feedback">titlt looks good!</div>
+            </div>
+
+            <div class="mb-3"> <label for="discription" class="form-lable">discription</label>
+                <input name="listing[description]" class="form-control" placeholder="enter description" required>
+                
+            </div>
+
+            <div class="mb-3"><label for="image filename" class="form-lable">image filrname</label>
+                <input name="listing[image][filename]"class="form-control"  placeholder="enter your image filename">
+            </div>
+            <div class="mb-3"><label for="image url" class="form-lable">image url</label>
+                <input name="listing[image][url]"class="form-control"  placeholder="enter your image url/link">
+            </div>
+            <div class="row">
+            <div class="mb-3 col-md-4"><label for="price" class="form-lable">price</label>
+                <input name="listing[price]"class="form-control"  placeholder="enter price" required>
+                <div class="invalid-feedback">please enter a valid price!</div>
+            </div>
+            <div class="mb-3 col-md-8"><label for="country" class="form-lable">country</label>
+                <input name="listing[country]"class="form-control"  placeholder="enter your country name" required>
+        <div class="invalid-feedback">please enter the country name!</div></div></div>
+            <div><label for="location" class="form-lable">location</label>
+                <input name="listing[location]"class="form-control"  placeholder="enter exact location" required>
+                <div class="invalid-feedback">please enter the valid location!</div>
+            </div><br>
+            <button class="btn btn-dark create-btn" >Create</button><br><br>
+        </form>
+    </div>
+</div>
+
