@@ -12,8 +12,8 @@ res.send("signed cookie sent");
 });
 
 app.get("/verify",(req,res)=>{
-    console.dir(req.signedCookies);
-    res.send("verify");
+    console.log(req.signedCookies);
+    res.send("verified");
 })
 app.get("/getcookies",(req,res)=>{
 res.cookie("greet","hello");
