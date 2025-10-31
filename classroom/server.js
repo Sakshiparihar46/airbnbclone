@@ -2,8 +2,26 @@ const express=require("express");
 const app=express();
 const users=require("./routes/user.js");
 const posts=require("./routes/post.js");
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser("secretcode"));
+
+app.get("/getsignedcookies",(req,res)=>{
+res.cookie("made-in","india",{signed:true});
+res.send("signed cookie sent");
+});
+
+app.get("/verify",(req,res)=>{
+    console.dir(req.signedCookies);
+    res.send("verify");
+})
+app.get("/getcookies",(req,res)=>{
+res.cookie("greet","hello");
+res.send("sent you some cookies!");
+})
 
 app.get("/",(req,res)=>{
+     console.dir(req.cookies);
     res.send("hi i am sakshi");
 });
 app.use("/users",users);
