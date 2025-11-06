@@ -7,8 +7,12 @@ const ejsmate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const listing = require("./routes/listing.js");
 const review = require("./routes/review.js");
+const user=require("./routes/user.js");
 const session=require("express-session");
 const flash=require("connect-flash");
+const passport=require("passport");
+const LocalStrategy=require("passport-local");
+const User=require("./models/user.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -31,15 +35,40 @@ const sessionOptions={
 app.use(session(sessionOptions));
 app.use(flash());
 
-app.use((req,res,next)=>{
-    res.locals.success=req.flash("success");
-    res.locals.error=req.flash("error");
+// initialize passport 
+app.use(passport.initialize());
+app.use(passport.session());
 
+// make current user available in all templates
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     next();
 });
 
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req,res,next)=>{
+    res.locals.success=req.flash("success");
+    res.locals.error=req.flash("error");
+    res.locals.currUser=req.user;
+    next();
+});
+
+// app.get("/demouser",async(req,res)=>{
+//  let fakeUser=new User({
+//     email:"student@gmail.com",
+//     username:"delta-student"
+//  });
+//  let registerUser=await User.register(fakeUser,"passport");
+//  res.send(registerUser);
+// });
+
 app.use("/listings", listing);
 app.use("/listings/:id/reviews", review);
+app.use("/",user);
 
 app.get("/", (req, res) => {
     res.send("hi i am sakshi");

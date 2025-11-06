@@ -1,0 +1,30 @@
+<%layout("/layouts/boilerplate.ejs")-%>
+    <div class="row">
+        <h3>Signup</h3>
+        <div class="col-8 offset-2">
+            <form action="/signup" method="post" class="needs-validation" novalidate>
+                <div class="mb-3"><label for="username" class="form-lable">Username:</label>
+                    <input name="username" id="username" type="text" class="form-control"
+                        placeholder="enter your username" required>
+                    <div class="valid-feedback">looks good!</div>
+
+
+                    <form action="/signup" method="post" class="needs-validation" novalidate>
+                        <div class="mb-3"><label for="email" class="form-lable">Email:</label>
+                            <input name="email" id="email" type="email" class="form-control"
+                                placeholder="enter your email" required>
+                            <div class="valid-feedback">looks good!</div>
+                        </div>
+
+                        <form action="/signup" method="post" class="needs-validation" novalidate>
+                            <div class="mb-3"><label for="password" class="form-lable">Password:</label>
+                                <input name="password" id="password" type="password" class="form-control"
+                                    placeholder="enter your password" required>
+                                <div class="valid-feedback">looks good!</div>
+                            </div>
+                            <button class="btn btn-success" style="background-color: red; cursor: pointer; ">Create account</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
