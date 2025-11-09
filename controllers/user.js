@@ -1,5 +1,4 @@
 const User=require("../models/user.js");
-const { render } = require("ejs");
 
 module.exports.renderSignupForm=(req,res)=>{
  res.render("./users/signup.ejs");
@@ -41,4 +40,5 @@ module.exports.logout=(req,res,next)=>{
         res.redirect("/listings");
     });
 }
+
 
