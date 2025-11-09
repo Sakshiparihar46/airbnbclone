@@ -18,7 +18,7 @@
                 </p>
             </div>
             <br>
-            
+            <% if(currUser && listing.owner._id.equals(currUser._id)){%>
             <div id="btn">
                 <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark">edit </a>
                 <br><br>
@@ -26,10 +26,12 @@
                     <button class="btn btn-dark create-btn delete">delete</button>
                 </form>
             </div>
-            
+            <%}%>
             <br>
         </div>
+        
         <div class="col-8 offset-2">
+            <% if(currUser){%>
             <hr>
             <h4>Leave a Review</h4>
             <form action="/listings/<%=listing._id%>/reviews" method="POST" novalidate class="needs-validation">
@@ -48,17 +50,18 @@
                 </div>
             </form>
             <hr>
-            <p><b>All Reviews</b></p>
+       <%}%>
+            <p><b>All Reviews</b></p> 
             <div class="row">
                 <% for(review of listing.reviews) {%>
                     <div class="card col-5 ms-3 mb-3">
                         <div class="card-body">
-                            <h5 class="card-title">robert downey junior</h5>
-                            <p class="card-text"><%=review.comment%></p>
-                            <p class="card-text"><%=review.rating%> stars</p>
-                        </div>
+                            <h5 class="card-title">@<I><B><%=review.author.username%></B></I></h5>
+                            <h6 class="card-text"><%=review.comment%></h6>
+                            <h6 class="card-text"><%=review.rating%>*</h6>
+                        </div><br>
                         <form method="POST" action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE" >
-                            <button class="btn btn-sm btn-dark mb-3">Delete</button>
+                            <button class="btn btn-dark create-btn delete mb-2">Delete</button>
                         </form>
                     </div>
                     <%}%>

@@ -3,12 +3,13 @@ let router=express.Router({mergeParams:true});
 const Listing = require("../models/listing.js");
 const WrapAsync=require("../utils/WrapAsync.js");
 const Review=require("../models/review.js");
-const {validateReviews}=require("../middleware.js");
+const {isLoggedIn,validateReviews,isreviewAuthor}=require("../middleware.js");
 
 //review post route
-router.post("/",validateReviews,WrapAsync(async(req,res)=>{
+router.post("/",isLoggedIn,validateReviews,WrapAsync(async(req,res)=>{
    let listing=await Listing.findById(req.params.id);
    let newreview=new Review(req.body.review);
+    newreview.author=req.user._id;
 
     listing.reviews.push(newreview);
     await newreview.save();
@@ -19,7 +20,7 @@ router.post("/",validateReviews,WrapAsync(async(req,res)=>{
 }));
 
 //delete review route
-router.delete("/:reviewId",WrapAsync(async(req,res)=>{
+router.delete("/:reviewId",isLoggedIn,isreviewAuthor,WrapAsync(async(req,res)=>{
 let{id,reviewId}=req.params;
 await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
 await Review.findByIdAndDelete(reviewId);
