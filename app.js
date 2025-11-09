@@ -57,15 +57,6 @@ app.use((req,res,next)=>{
     next();
 });
 
-// app.get("/demouser",async(req,res)=>{
-//  let fakeUser=new User({
-//     email:"student@gmail.com",
-//     username:"delta-student"
-//  });
-//  let registerUser=await User.register(fakeUser,"passport");
-//  res.send(registerUser);
-// });
-
 app.use("/listings", listing);
 app.use("/listings/:id/reviews", review);
 app.use("/",user);
@@ -84,6 +75,7 @@ async function main() {
 app.use((req, res, next) => {
     next(new ExpressError(404, "page not found"));
 });
+//error handle
 app.use((err, req, res, next) => {
     let { statusCode = 500, message = "something went wrong!" } = err;
     res.status(statusCode).render("./listing/error.ejs", { message });

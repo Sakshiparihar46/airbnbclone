@@ -84,7 +84,8 @@ body{
 }
 /* show page */
 .show-img{
-    height: 30vh;
+    height: 40vh;
+    width: 35vw !important;
 }
 #btn{
     display: flex;
