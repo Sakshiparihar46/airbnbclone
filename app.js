@@ -61,14 +61,23 @@ app.use((req,res,next)=>{
     next();
 });
 
+// Fetch unique countries for autocomplete
+app.use(async (req, res, next) => {
+    try {
+        const Listing = require("./models/listing");
+        const listings = await Listing.find({});
+        const uniqueCountries = [...new Set(listings.map(l => l.country).filter(c => c))];
+        res.locals.uniqueCountries = uniqueCountries.sort();
+        next();
+    } catch (err) {
+        res.locals.uniqueCountries = [];
+        next();
+    }
+});
+
 app.use("/listings", listing);
 app.use("/listings/:id/reviews", review);
 app.use("/",user);
-
-app.get("/", (req, res) => {
-    res.send("hi i am sakshi");
-}); 
-
 
 main().then(() => console.log("connection successful")).catch((err) => console.log(err));
 

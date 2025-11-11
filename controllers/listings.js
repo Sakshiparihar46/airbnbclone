@@ -1,7 +1,12 @@
 const Listing=require("../models/listing");
 
 module.exports.index=async (req, res) => {
-    const alllisting = await Listing.find({});
+    let filter = {};
+    console.log(req.query.country);
+    if (req.query.country) {
+        filter.country = req.query.country;
+    }
+    const alllisting = await Listing.find(filter);
     res.render("./listing/index.ejs", { alllisting });
 };
 
@@ -35,13 +40,26 @@ module.exports.createListing=async(req, res) => {
 module.exports.renderEditForm=async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
-    res.render("./listing/edit.ejs", { listing });
+    if(!listing){
+        res.flash("error","listing you requested for does not exist!");
+        res.redirect("/listings");
+    }
+
+    let original_imageUrl=listing.image.url;
+    original_imageUrl=original_imageUrl.replace("/upload","/upload/h_150,w_250");
+    res.render("./listing/edit.ejs", { listing,original_imageUrl});
 }
 
 module.exports.updateListing=async (req, res) => {
      let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    req.flash("success"," Listing is udated successfully!");
+    let listing=await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    if( typeof req.file!="undefined"){
+     let url=req.file.path;
+    let filename=req.file.filename;
+    listing.image={url,filename};
+    await listing.save();}
+
+    req.flash("success"," Listing is updated successfully!");
     res.redirect(`/listings/${id}`);
 }
 
