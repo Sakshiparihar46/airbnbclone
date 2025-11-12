@@ -34,7 +34,7 @@ async function main() {
 }
 
 const sessionOptions={
-    secret:"my super secret code",
+    secret:process.env.SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
