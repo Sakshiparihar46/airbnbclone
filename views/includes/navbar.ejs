@@ -19,7 +19,31 @@
     border-radius: 25px;
     padding: 0.5rem 3rem 0.5rem 3rem;
     font-size: 0.9rem;
+  }
 
+  .profile-dropdown {
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border: 1px solid #fe424d;
+    border-radius: 25px;
+    color: #fe424d !important;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .profile-dropdown:hover {
+    background-color: #fe424d;
+    color: #fff !important;
+  }
+
+  .dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .dropdown-item:hover {
+    background-color: #f8757e;
+    color: #fff;
   }
 
 </style>
@@ -53,25 +77,38 @@
         
       
         <datalist id="countryList">
-          <% uniqueCountries.forEach(country => { %>
+          <% (typeof uniqueCountries !== 'undefined' ? uniqueCountries : []).forEach(country => { %>
             <option value="<%= country %>"></option>
           <% }); %>
         </datalist>
         
-      
+    
         <script>
-          document.getElementById('countryInput').addEventListener('change', function() {
-            document.getElementById('searchForm').submit();
-          });
+          const countryInput = document.getElementById('countryInput');
+          if (countryInput) {
+            countryInput.addEventListener('change', function() {
+              const form = document.getElementById('searchForm');
+              if (form) form.submit();
+            });
+          }
         </script>
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="/listings/new" style="color:blue!important;">Add listinting</a>
+          <a class="nav-link" href="/listings/new" style="color:blue!important; border:1px solid blue ;border-radius:1rem; margin-right: 1.5rem;">Add listing<i class="fa-solid fa-plus"></i></a>
           <% if(!currUser){%>
           <a class="nav-link" style="color: #fe424d!important;" href="/signup"><b>Sign up</b></a>
           <a class="nav-link" style="color: #fe424d !important;" href="/login"><b>Login</b></a>
           <% } %>
           <% if(currUser) { %>
-          <a class="nav-link" style="color: #fe424d!important;" href="/logout"><B>Logout</B></a>
+          <div class="nav-item dropdown">
+            <a class="nav-link profile-dropdown dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-user"></i> <%= currUser.username.split(' ')[0] %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-circle"></i> My Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+          </div>
           <% } %>
         </div>
     </div>

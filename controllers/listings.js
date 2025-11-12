@@ -2,7 +2,6 @@ const Listing=require("../models/listing");
 
 module.exports.index=async (req, res) => {
     let filter = {};
-    console.log(req.query.country);
     if (req.query.country) {
         filter.country = req.query.country;
     }

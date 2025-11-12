@@ -12,6 +12,7 @@ const listing = require("./routes/listing.js");
 const review = require("./routes/review.js");
 const user=require("./routes/user.js");
 const session=require("express-session");
+const MongoStore=require("connect-mongo");
 const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
@@ -24,6 +25,13 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsmate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+const mongoUrl = 'mongodb://127.0.0.1:27017/wonderlust';
+
+
+main().then(() => console.log("connection successful")).catch((err) => console.log(err));
+async function main() {
+    await mongoose.connect(mongoUrl);
+}
 
 const sessionOptions={
     secret:"my super secret code",
@@ -35,6 +43,7 @@ const sessionOptions={
         httpOnly:true
     },
 };
+
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -61,29 +70,29 @@ app.use((req,res,next)=>{
     next();
 });
 
-// Fetch unique countries for autocomplete
+
 app.use(async (req, res, next) => {
     try {
-        const Listing = require("./models/listing");
-        const listings = await Listing.find({});
-        const uniqueCountries = [...new Set(listings.map(l => l.country).filter(c => c))];
-        res.locals.uniqueCountries = uniqueCountries.sort();
-        next();
+        
+        if (mongoose.connection && mongoose.connection.readyState === 1) {
+            const Listing = require("./models/listing");
+            const listings = await Listing.find({});
+            const uniqueCountries = [...new Set(listings.map(l => l.country).filter(c => c))];
+            res.locals.uniqueCountries = uniqueCountries.sort();
+        } else {
+            res.locals.uniqueCountries = [];
+        }
     } catch (err) {
         res.locals.uniqueCountries = [];
-        next();
     }
+    next();
 });
+
 
 app.use("/listings", listing);
 app.use("/listings/:id/reviews", review);
 app.use("/",user);
 
-main().then(() => console.log("connection successful")).catch((err) => console.log(err));
-
-async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/wonderlust');
-}
 
 app.use((req, res, next) => {
     next(new ExpressError(404, "page not found"));
