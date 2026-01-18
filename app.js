@@ -16,6 +16,7 @@ const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
+const dbUrl = process.env.MONGODB_URL;
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -24,12 +25,11 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsmate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-const mongoUrl = 'mongodb://127.0.0.1:27017/wonderlust';
 
 
 main().then(() => console.log("connection successful")).catch((err) => console.log(err));
 async function main() {
-    await mongoose.connect(mongoUrl);
+    await mongoose.connect(dbUrl);
 }
 
 const sessionOptions={
